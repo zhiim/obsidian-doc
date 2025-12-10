@@ -3,19 +3,15 @@
 <!doctype html>
 <html>
   <head>
+    <link rel="icon" href="/r2/Notes/favicon.ico" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <meta charset="UTF-8" />
-    <!-- theme: Simple (light + dark) -->
+
+    <!-- Theme: Simple -->
     <link
       rel="stylesheet"
-      media="(prefers-color-scheme: light)"
       href="https://cdn.jsdelivr.net/npm/docsify-themeable@0/dist/css/theme-simple.css"
-    />
-    <link
-      rel="stylesheet"
-      media="(prefers-color-scheme: dark)"
-      href="https://cdn.jsdelivr.net/npm/docsify-themeable@0/dist/css/theme-simple-dark.css"
     />
 
     <!-- custom style -->
@@ -23,6 +19,55 @@
       .markdown-section img {
         display: block;
         margin: 0 auto;
+      }
+
+      /* custom theme css */
+      .markdown-section em {
+        color: #e66351;
+      }
+      :root {
+        /* _app.css */
+        --theme-hue: 210;
+        --theme-saturation: 50%;
+        --theme-lightness: 28%;
+        --mono-hue: 220;
+        --mono-saturation: 10%;
+        --mono-shade3: #1d1d1f;
+        --mono-shade2: #3a3a3c;
+        --mono-base: #86868b;
+        --mono-tint3: #f5f7f9;
+        /* _base.css */
+        --base-background-color: #fcfcfc;
+        --base-font-family:
+          -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial,
+          sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+        --base-font-size: 16px;
+        --base-line-height: 1.8;
+        --mark-background: #f8d9c7;
+        --selection-color: #d3d3d3;
+        --strong-color: #1f466d;
+        /* _sidebar.css */
+        --sidebar-background: #f3f4f6;
+        --sidebar-width: 18rem;
+        --sidebar-padding: 20px 25px;
+        --sidebar-nav-link-color: #505050;
+        --sidebar-nav-link-font-weight: 500;
+        --sidebar-nav-link-color--active: var(--theme-color);
+        --sidebar-nav-link-text-decoration--active: none;
+        --sidebar-nav-link-font-weight--active: 600;
+        --sidebar-border-width: 1px;
+        --sidebar-border-color: #eaeaea;
+        /* _content.css */
+        --content-max-width: 50em;
+        --heading-h1-font-weight: 700;
+        --heading-h1-color: #111;
+        --heading-h2-border-bottom: none;
+        --link-text-decoration-color: #e66351;
+        --blockquote-background: #f9f9f9;
+        --blockquote-border-color: var(--theme-color);
+        --blockquote-border-width: 0 0 0 4px;
+        --code-theme-background: #f6f8fa;
+        --code-inline-background: rgba(27, 31, 35, 0.05);
       }
     </style>
   </head>
@@ -33,7 +78,7 @@
 
       window.$docsify = {
         // docsify configuration options
-        name: "Obsidian Notes",
+        name: "📑 Obsidian Notes",
         basePath: "/r2/Notes/",
         subMaxLevel: 2,
         loadSidebar: true,
@@ -58,6 +103,8 @@
 
     <!-- docsify-themeable -->
     <script src="https://cdn.jsdelivr.net/npm/docsify-themeable@0/dist/js/docsify-themeable.min.js"></script>
+
+    <!-- mermaid support -->
     <script type="module">
       import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs";
       mermaid.initialize({ startOnLoad: true });

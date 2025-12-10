@@ -186,32 +186,47 @@ export default {
   async fetch(request, env) {
     const url = new URL(request.url);
 
-    // 1. 只有访问 /r2/ 开头的路径才处理
-    // 例如请求: https://notes.yourdomain.com/r2/Notes/CPP/image.png
-    if (url.pathname.startsWith("/r2/")) {
-      // 2. 去掉 /r2/ 前缀，提取真实的文件路径
-      // 变成: Notes/CPP/image.png
-      const objectKey = decodeURIComponent(url.pathname.slice(4));
+    // 1. 路径检查
+    if (!url.pathname.startsWith("/r2/")) {
+      return new Response("Not found", { status: 404 });
+    }
 
-      // 3. 定义你的 R2 绑定变量名 (下面会设置)
-      // 这里的 MY_BUCKET 是我们在 Worker 设置里绑定的 R2 桶
-      const object = await env.MY_BUCKET.get(objectKey);
+    // 2. 提取文件名
+    const objectKey = decodeURIComponent(url.pathname.slice(4));
+
+    // 3. 准备传给 R2 的参数 (这是关键改进点)
+    // 允许 Range (视频拖拽) 和 If-None-Match (304协商缓存)
+    const options = {
+      range: request.headers.get("range"),
+      onlyIf: request.headers,
+    };
+
+    try {
+      const object = await env.MY_BUCKET.get(objectKey, options);
 
       if (object === null) {
         return new Response("File Not Found", { status: 404 });
       }
 
       const headers = new Headers();
+      // 写入 R2 原有的元数据 (ContentType, ETag 等)
       object.writeHttpMetadata(headers);
       headers.set("etag", object.httpEtag);
 
+      // 4. 显式添加缓存控制 (双重保险)
+      // 这里的 public 表示允许 CDN 缓存
+      // max-age=7200 表示建议缓存 2 小时 (与你的后台设置匹配)
+      headers.set("Cache-Control", "public, max-age=7200");
+
+      // 5. 返回响应
+      // 如果 R2 返回的是部分内容 (Range) 或 304，这里会自动处理 status
       return new Response(object.body, {
         headers,
+        status: object.body ? (request.headers.get("range") ? 206 : 200) : 304,
       });
+    } catch (e) {
+      return new Response("Error: " + e.message, { status: 500 });
     }
-
-    // 如果不是 /r2/ 路径，就忽略（理论上路由设置好后不会走到这）
-    return new Response("Not found", { status: 404 });
   },
 };
 ```
