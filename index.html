@@ -38,6 +38,16 @@
         subMaxLevel: 2,
         loadSidebar: true,
         relativePath: true,
+        plugins: [
+          // add custom plugin to support ==highlight==
+          function (hook) {
+            hook.beforeEach(function (content) {
+              // 正则替换：将 ==text== 替换为 <mark>text</mark>
+              return content.replace(/==(.+?)==/g, "<mark>$1</mark>");
+            });
+          },
+        ],
+
         // mermaid configuration options
         mermaidConfig: {
           querySelector: ".mermaid",
