@@ -21,6 +21,8 @@ Publish obsidian notes using [docsify](https://docsify.js.org).
 
 ```python
 import os
+from datetime import datetime
+import logging
 import urllib.parse
 
 # ---------------- 配置区域 ----------------
@@ -51,6 +53,11 @@ IGNORE_FILES = {
 OVERWRITE_README = True
 # ----------------------------------------
 
+logger = logging.getLogger()
+file_handler = logging.FileHandler("info.log")
+logger.addHandler(file_handler)
+logger.setLevel(logging.INFO)
+
 
 def get_web_path(path):
     """
@@ -74,6 +81,22 @@ def get_web_path(path):
     parts = clean_path.split("/")
     encoded_parts = [urllib.parse.quote(p) for p in parts]
     return "/".join(encoded_parts)
+
+
+def write_if_changed(filepath, content):
+    """
+    仅当文件不存在或内容不同时才写入
+    返回: True 表示写入了文件，False 表示跳过
+    """
+    if os.path.exists(filepath):
+        with open(filepath, "r", encoding="utf-8") as f:
+            existing_content = f.read()
+        if existing_content == content:
+            return False
+
+    with open(filepath, "w", encoding="utf-8") as f:
+        f.write(content)
+    return True
 
 
 def generate_files_for_current_dir(root, dirs, files):
@@ -124,8 +147,9 @@ def generate_files_for_current_dir(root, dirs, files):
 
     if sidebar_lines:
         sidebar_path = os.path.join(root, "_sidebar.md")
-        with open(sidebar_path, "w", encoding="utf-8") as f:
-            f.write("\n".join(sidebar_lines))
+        siderbar_content = "\n".join(sidebar_lines)
+        if write_if_changed(sidebar_path, siderbar_content):
+            logging.info(f"✅ 更新: {sidebar_path}")
 
     # --- 4. 生成 README.md ---
     readme_path = os.path.join(root, "README.md")
@@ -156,12 +180,13 @@ def generate_files_for_current_dir(root, dirs, files):
         if not folder_links and not file_links:
             readme_lines.append("*此目录下暂时没有公开的笔记。*")
 
-        with open(readme_path, "w", encoding="utf-8") as f:
-            f.write("\n".join(readme_lines))
-        print(f"✅ 更新: {readme_path}")
+        readme_content = "\n".join(readme_lines)
+        if write_if_changed(readme_path, readme_content):
+            logging.info(f"✅ 更新: {readme_path}")
 
 
 if __name__ == "__main__":
+    logging.info(f"{datetime.now().strftime('%Y-%m-%d-%H:%M:%S')} ----------")
     for root, dirs, files in os.walk("."):
         dirs[:] = [d for d in dirs if d not in IGNORE_DIRS]
         dirs.sort()
