@@ -191,41 +191,48 @@ export default {
       return new Response("Not found", { status: 404 });
     }
 
-    // 2. 提取文件名
-    const objectKey = decodeURIComponent(url.pathname.slice(4));
-
-    // 3. 准备传给 R2 的参数 (这是关键改进点)
-    // 允许 Range (视频拖拽) 和 If-None-Match (304协商缓存)
-    const options = {
-      range: request.headers.get("range"),
-      onlyIf: request.headers,
-    };
-
     try {
-      const object = await env.MY_BUCKET.get(objectKey, options);
+      // 2. 提取文件名 (解码 URL 中的中文)
+      const objectKey = decodeURIComponent(url.pathname.slice(4));
 
+      // 3. 直接请求 R2 (不带任何条件参数，防止 R2 绑定报错)
+      const object = await env.MY_BUCKET.get(objectKey);
+
+      // 4. 文件不存在的处理
       if (object === null) {
         return new Response("File Not Found", { status: 404 });
       }
 
+      // 5. 准备响应头
       const headers = new Headers();
-      // 写入 R2 原有的元数据 (ContentType, ETag 等)
       object.writeHttpMetadata(headers);
       headers.set("etag", object.httpEtag);
-
-      // 4. 显式添加缓存控制 (双重保险)
-      // 这里的 public 表示允许 CDN 缓存
-      // max-age=7200 表示建议缓存 2 小时 (与你的后台设置匹配)
+      // 再次强调：强制 CDN 缓存 2 小时
       headers.set("Cache-Control", "public, max-age=7200");
 
-      // 5. 返回响应
-      // 如果 R2 返回的是部分内容 (Range) 或 304，这里会自动处理 status
+      // 获取浏览器发来的 ETag (通常带引号，例如 "abc")
+      const clientETag = request.headers.get("If-None-Match");
+      // 获取 R2 文件的 ETag (通常不带引号，例如 abc)
+      const serverETag = object.httpEtag;
+
+      // 如果浏览器发了 ETag，且内容匹配
+      if (clientETag && serverETag) {
+        // 简单粗暴的匹配：只要包含由于格式不同(带不带引号)，我们检查包含关系即可
+        if (clientETag.includes(serverETag)) {
+          // 命中缓存！不返回内容，只返回 304 状态码
+          return new Response(null, {
+            status: 304,
+            headers,
+          });
+        }
+      }
+
+      // 7. 未命中缓存，返回完整文件
       return new Response(object.body, {
         headers,
-        status: object.body ? (request.headers.get("range") ? 206 : 200) : 304,
       });
     } catch (e) {
-      return new Response("Error: " + e.message, { status: 500 });
+      return new Response("Worker Error: " + e.message, { status: 500 });
     }
   },
 };
