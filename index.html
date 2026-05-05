@@ -17,99 +17,84 @@
     <!-- custom style -->
     <style>
       :root {
-          /* Palette */
-          --palette-orange-1: #e76254;
-          --palette-orange-2: #ef8a47;
-          --palette-orange-3: #f7aa58;
-          --palette-orange-4: #ffd06f;
-          --palette-orange-5: #ffe6b7;
-          --palette-blue-1: #1e466e;
-          --palette-blue-2: #376795;
-          --palette-blue-3: #528fad;
-          --palette-blue-4: #72bcd5;
-          --palette-blue-5: #aadce0;
-  
-          /* _app.css */
-          --theme-hue: 210;
-          --theme-saturation: 50%;
-          --theme-lightness: 28%;
-          --mono-hue: 220;
-          --mono-saturation: 10%;
-          --mono-shade3: #1d1d1f;
-          --mono-shade2: #3a3a3c;
-          --mono-base: #86868b;
-          --mono-tint3: #f5f7f9;
-          /* _base.css */
-          --base-background-color: #fcfcfc;
-          --base-font-family:
-            -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial,
-            sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
-          --base-font-size: 16px;
-          --base-line-height: 1.8;
-          --mark-background: #f8d9c7;
-          --selection-color: #d3d3d3;
-          --strong-color: var(--palette-blue-1);
-          /* _sidebar.css */
-          --sidebar-background: #f3f4f6;
-          --sidebar-width: 18rem;
-          --sidebar-padding: 20px 25px;
-          --sidebar-nav-link-color: #505050;
-          --sidebar-nav-link-font-weight: 500;
-          --sidebar-nav-link-color--active: var(--palette-blue-2);
-          --sidebar-nav-link-text-decoration--active: none;
-          --sidebar-nav-link-font-weight--active: 600;
-          --sidebar-border-width: 1px;
-          --sidebar-border-color: #eaeaea;
-          /* _content.css */
-          --content-max-width: 50em;
-          --heading-h1-font-weight: 300;
-          --heading-h1-color: #111;
-          --heading-h2-border-bottom: none;
-          --link-text-decoration-color: var(--palette-orange-1);
-          --blockquote-background: #f9f9f9;
-          --blockquote-border-color: var(--palette-blue-3);
-          --blockquote-border-width: 0 0 0 4px;
-          --code-theme-background: #f6f8fa;
-          --code-inline-background: rgba(27, 31, 35, 0.05);
+        /* Palette */
+        --palette-orange-1: #e76254;
+        --palette-orange-2: #ef8a47;
+        --palette-orange-3: #f7aa58;
+        --palette-orange-4: #ffd06f;
+        --palette-orange-5: #ffe6b7;
+        --palette-blue-1: #1e466e;
+        --palette-blue-2: #376795;
+        --palette-blue-3: #528fad;
+        --palette-blue-4: #72bcd5;
+        --palette-blue-5: #aadce0;
+
+        /* _app.css */
+        --theme-hue: 210;
+        --theme-saturation: 50%;
+        --theme-lightness: 28%;
+        --mono-hue: 220;
+        --mono-saturation: 10%;
+        --mono-shade3: #1d1d1f;
+        --mono-shade2: #3a3a3c;
+        --mono-base: #86868b;
+        --mono-tint3: #f5f7f9;
+        /* _base.css */
+        --base-background-color: #fcfcfc;
+        --base-font-family:
+          -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial,
+          sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+        --base-font-size: 16px;
+        --base-line-height: 1.8;
+        --mark-background: #f8d9c7;
+        --selection-color: #d3d3d3;
+        --strong-color: var(--palette-blue-1);
+        /* _sidebar.css */
+        --sidebar-background: #f3f4f6;
+        --sidebar-width: 18rem;
+        --sidebar-padding: 20px 25px;
+        --sidebar-nav-link-color: #505050;
+        --sidebar-nav-link-font-weight: 500;
+        --sidebar-nav-link-color--active: var(--palette-blue-2);
+        --sidebar-nav-link-text-decoration--active: none;
+        --sidebar-nav-link-font-weight--active: 600;
+        --sidebar-border-width: 1px;
+        --sidebar-border-color: #eaeaea;
+        /* _content.css */
+        --content-max-width: 50em;
+        --heading-h1-font-weight: 300;
+        --heading-h1-color: #111;
+        --heading-h2-border-bottom: none;
+        --link-text-decoration-color: var(--palette-orange-1);
+        --blockquote-background: #f9f9f9;
+        --blockquote-border-color: var(--palette-blue-3);
+        --blockquote-border-width: 0 0 0 4px;
+        --code-theme-background: #f6f8fa;
+        --code-inline-background: rgba(27, 31, 35, 0.05);
       }
 
       .markdown-section img {
-          display: block;
-          margin: 0 auto;
-          border-radius: 6px;
+        display: block;
+        margin: 0 auto;
+        border-radius: 6px;
       }
 
       .markdown-section em {
         color: var(--palette-orange-1);
       }
 
-      .sidebar {
-        --sidebar-nav-indent: 6px;
-      }
-      .sidebar ul li a {
-        padding: 6px 0;
-        line-height: normal;
-        text-overflow: initial;
-        white-space: normal;
-      }
       .sidebar ul li a,
       .sidebar ul li p {
-        font-size: 1.2rem;
+        font-size: 1rem;
         font-weight: 600;
       }
       .sidebar ul li ul a,
       .sidebar ul li ul p {
-        font-size: 1rem;
+        font-size: 0.9rem;
         font-weight: 400;
       }
       .sidebar ul li.active > a {
         border-right: 4px solid var(--palette-blue-2);
-      }
-      .sidebar ul li ul {
-        margin-bottom: 14px;
-      }
-      .sidebar ul li .emoji {
-        font-size: 1rem;
       }
     </style>
   </head>
