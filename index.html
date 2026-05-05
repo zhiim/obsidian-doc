@@ -68,6 +68,41 @@
         --blockquote-border-width: 0 0 0 4px;
         --code-theme-background: #f6f8fa;
         --code-inline-background: rgba(27, 31, 35, 0.05);
+
+        .sidebar {
+          --sidebar-nav-indent: 6px;
+        }
+        .sidebar ul li a {
+          padding: 6px 0;
+          line-height: normal;
+          text-overflow: initial;
+          white-space: normal;
+        }
+        .sidebar ul li a,
+        .sidebar ul li p {
+          font-size: 1rem;
+          font-weight: 600;
+        }
+        .sidebar ul li ul a,
+        .sidebar ul li ul p {
+          font-size: 0.813rem;
+          font-weight: 400;
+        }
+        .sidebar ul li.active > a {
+          border-right: 4px solid var(--palette-blue-2);
+        }
+        .sidebar ul li ul {
+          margin-bottom: 14px;
+        }
+        .sidebar ul li .emoji {
+          font-size: 1rem;
+        }
+  
+        .markdown-section img {
+          display: block;
+          margin: 0 auto;
+          border-radius: 6px;
+        }
       }
     </style>
   </head>
