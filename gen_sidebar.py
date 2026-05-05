@@ -103,7 +103,6 @@ def generate_files_for_current_dir(root, dirs, files):
     sidebar_lines = []
     if back_link:
         sidebar_lines.append(f"* [🔙 返回上一级]({back_link})")
-        sidebar_lines.append("")
 
     for name, url in folder_links:
         sidebar_lines.append(f"* [**{name}**]({url})")
